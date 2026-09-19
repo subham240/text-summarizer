@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 import torch
 import re
+from typing import Any
 
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
@@ -23,7 +24,10 @@ app = FastAPI(
 # Load Model
 # --------------------------------------------------
 
-model = T5ForConditionalGeneration.from_pretrained(
+# Pylance may report a false-positive type mismatch for the Hugging Face model
+# object in newer transformers builds. Keeping the model as Any preserves the
+# runtime behavior while keeping the code type-checker friendly.
+model: Any = T5ForConditionalGeneration.from_pretrained(
     "./saved_summary_model"
 )
 
